@@ -1,0 +1,60 @@
+{
+	"Create Controller Async Method": {
+        "prefix": "asyncController",
+        "body": [
+            "async (req: Request, res: Response): Promise<any> => {",
+            "\ttry {",
+            "\t\t$1",
+            "\t} catch (error) {",
+            "\t\thandleErrors(error, res);",
+            "\t}",
+            "}"
+        ],
+        "description": "Create async method for controller"
+    },
+    "Start Controller": {
+        "prefix": "startController",
+        "body": [
+            "import { Request, Response } from 'express';",
+            "import handleErrors from '../utils/handleErrors';\n",
+            "export const ${TM_FILENAME_BASE} = {",
+            "\t$1",
+            "}"
+        ],
+        "description": "Create async method for controller"
+    },
+    "End Controller - Post": {
+        "prefix": "endController - Post",
+        "body": [
+            "return res.status(201).end();"            
+        ],
+        "description": "Method for end a post controller."
+    },
+    "End Controller - Put/Patch": {
+        "prefix": "endController - Put/Patch",
+        "body": [
+            "return res.status(200).end();"            
+        ],
+        "description": "Method for end a post controller."
+    },
+    "Start Service": {
+        "prefix": "startService",
+        "body": [
+            "import prismaClient from '../prisma';\n",            
+            "export const ${TM_FILENAME_BASE} = {",
+            "\t$1",
+            "}"
+        ],
+        "description": "Create async method for controller"
+    },
+    "Start Validation": {
+        "prefix": "startValidation",
+        "body": [
+            "export const ${TM_FILENAME_BASE} = {",
+            "\t$1",
+            "}"
+        ],
+        "description": "Create Validation Setup"
+    }
+
+}

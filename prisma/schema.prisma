@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../src/db/database.db"
+}
+
+model tb_container_movements {
+  id                                                             Int           @id @default(autoincrement())
+  containerId                                                    Int
+  toLocationId                                                   Int?
+  movedAt                                                        DateTime      @default(now())
+  fromLocationId                                                 Int?  
+  tb_containers                                                  tb_containers @relation(fields: [containerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tb_containers {
+  id                     Int                      @id @default(autoincrement())
+  origin                 String
+  receivedDate           DateTime
+  weight                 Float
+  statusId               Int
+  locationId             Int
+  uuid                   String
+  uniqueIdentifier       String                   @unique(map: "sqlite_autoindex_tb_containers_1")
+  tb_container_movements tb_container_movements[]
+  tb_locations           tb_locations             @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tb_containers_status   tb_containers_status     @relation(fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tb_containers_status {
+  id            Int             @id @default(autoincrement())
+  description   String?
+  tb_containers tb_containers[]
+}
+
+model tb_locations {
+  id                                                                       Int                      @id @default(autoincrement())
+  zone                                                                     String
+  street                                                                   Int
+  column                                                                   Int
+  level                                                                    Int
+  position                                                                 Int
+  maxCapacity                                                              Float  
+  tb_containers                                                            tb_containers[]
+
+  @@unique([zone, street, column, level, position], map: "sqlite_autoindex_tb_locations_1")
+}
