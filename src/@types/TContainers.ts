@@ -1,6 +1,6 @@
 type TContainersChangePosition = {
     containerId:  number;
-    toLocationId: number;   
+    toLocationId: number | null;   
 }
 
 type TContainersUpdate = {

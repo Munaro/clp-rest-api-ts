@@ -8,25 +8,27 @@ datasource db {
 }
 
 model tb_container_movements {
-  id                                                             Int           @id @default(autoincrement())
-  containerId                                                    Int
-  toLocationId                                                   Int?
-  movedAt                                                        DateTime      @default(now())
-  fromLocationId                                                 Int?  
-  tb_containers                                                  tb_containers @relation(fields: [containerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                                                               Int           @id @default(autoincrement())
+  containerId                                                      Int
+  toLocationId                                                     Int?
+  fromLocationId                                                   Int?
+  movedAt                                                          DateTime      @default(now())
+  tb_locations_tb_container_movements_fromLocationIdTotb_locations tb_locations? @relation("tb_container_movements_fromLocationIdTotb_locations", fields: [fromLocationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tb_locations_tb_container_movements_toLocationIdTotb_locations   tb_locations? @relation("tb_container_movements_toLocationIdTotb_locations", fields: [toLocationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tb_containers                                                    tb_containers @relation(fields: [containerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model tb_containers {
   id                     Int                      @id @default(autoincrement())
   origin                 String
-  receivedDate           DateTime
+  receivedDate           DateTime                 @default(now())
   weight                 Float
   statusId               Int
-  locationId             Int
+  locationId             Int?
   uuid                   String
   uniqueIdentifier       String                   @unique(map: "sqlite_autoindex_tb_containers_1")
   tb_container_movements tb_container_movements[]
-  tb_locations           tb_locations             @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tb_locations           tb_locations?            @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   tb_containers_status   tb_containers_status     @relation(fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -37,14 +39,16 @@ model tb_containers_status {
 }
 
 model tb_locations {
-  id                                                                       Int                      @id @default(autoincrement())
-  zone                                                                     String
-  street                                                                   Int
-  column                                                                   Int
-  level                                                                    Int
-  position                                                                 Int
-  maxCapacity                                                              Float  
-  tb_containers                                                            tb_containers[]
+  id                                                                         Int                      @id @default(autoincrement())
+  zone                                                                       String
+  street                                                                     Int
+  column                                                                     Int
+  level                                                                      Int
+  position                                                                   Int
+  maxCapacity                                                                Float
+  tb_container_movements_tb_container_movements_fromLocationIdTotb_locations tb_container_movements[] @relation("tb_container_movements_fromLocationIdTotb_locations")
+  tb_container_movements_tb_container_movements_toLocationIdTotb_locations   tb_container_movements[] @relation("tb_container_movements_toLocationIdTotb_locations")
+  tb_containers                                                              tb_containers[]
 
   @@unique([zone, street, column, level, position], map: "sqlite_autoindex_tb_locations_1")
 }
